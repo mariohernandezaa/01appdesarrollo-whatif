@@ -10,6 +10,8 @@ const handleSubmit = (submittedQuestion: string) => {
   // La conexión con la API de IA se implementará en una fase posterior.
   question.value = submittedQuestion
 }
+
+const selectedYear = ref(1950)
 </script>
 
 <template>
@@ -26,6 +28,7 @@ const handleSubmit = (submittedQuestion: string) => {
     <section class="space-y-4">
       <HypothesisForm v-model="question" @submit="handleSubmit" />
       <ExampleQuestions @select="handleSelectExample" />
+      <TimeLine v-model="selectedYear" />
     </section>
 
     <section>

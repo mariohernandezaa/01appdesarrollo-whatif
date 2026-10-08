@@ -1,25 +1,51 @@
 <script setup lang="ts">
-const examples = [
-  '¿Qué habría pasado si Internet se hubiese inventado en 1950?',
-  '¿Qué habría pasado si los dinosaurios no se hubieran extinguido?',
-  '¿Qué habría pasado si la humanidad nunca hubiera inventado los coches?'
-]
+const props = withDefaults(defineProps<{
+	modelValue: number
+	minYear?: number
+	maxYear?: number
+}>(), {
+	minYear: 200,
+	maxYear: 2100
+})
 
 const emit = defineEmits<{
-  select: [question: string]
+	'update:modelValue': [year: number]
 }>()
+
+const selectedYear = computed({
+	get: () => props.modelValue,
+	set: (value: number | string) => emit('update:modelValue', Number(value))
+})
 </script>
 
 <template>
-  <div class="flex flex-wrap gap-2">
-    <button
-      v-for="example in examples"
-      :key="example"
-      type="button"
-      class="rounded-full border border-neutral-300 px-4 py-2 text-sm text-neutral-600 transition-colors hover:border-neutral-900 hover:text-neutral-900"
-      @click="emit('select', example)"
-    >
-      {{ example }}
-    </button>
-  </div>
+	<section
+		class="space-y-3"
+		v-motion
+		:initial="{ opacity: 0, y: 12 }"
+		:enter="{ opacity: 1, y: 0, transition: { duration: 250 } }"
+	>
+		<label for="scenario-year" class="block text-sm font-medium">
+			Año de referencia
+		</label>
+
+		<output for="scenario-year" class="block text-2xl font-semibold">
+			{{ selectedYear }}
+		</output>
+
+		<input
+			id="scenario-year"
+			v-model.number="selectedYear"
+			type="range"
+			:min="props.minYear"
+			:max="props.maxYear"
+			step="1"
+			class="w-full"
+		>
+
+		<div class="flex justify-between text-xs" aria-hidden="true">
+			<span>{{ props.minYear }}</span>
+			<span>{{ props.maxYear }}</span>
+		</div>
+	</section>
 </template>
