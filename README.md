@@ -16,7 +16,7 @@ De hecho, actualmente no está implementado todos los formularios ni nada del es
 
 
 ## Requisitos
-![Captura de la aplicación](./img/cap1.png)
+![Captura de la aplicación](./public/img/cap1.png)
 
 ## Tecnologías
 
