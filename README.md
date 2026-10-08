@@ -1,14 +1,22 @@
 # ¿Qué habría pasado si...?
 
-Aplicación web para plantear preguntas hipotéticas y explorar cómo podrían cambiar la historia, la sociedad o la vida cotidiana en universos alternativos.
+Aplicación web para plantear preguntas hipotéticas y explorar cómo podrían cambiar la historia, la sociedad o la vida cotidiana en universos alternativos. (Pregunta cualquier cosa jejejej)
 
-Por ejemplo: «¿Qué habría pasado si Internet se hubiese inventado en 1950?». La experiencia está pensada para que la persona escriba una hipótesis o parta de una pregunta de ejemplo y, cuando se incorpore la generación de escenarios, consulte una narración con sus posibles consecuencias.
+Por ejemplo: «¿Qué habría pasado si Internet se hubiese inventado en el 1AC?». Tendrás varios campos distintos de formulario para hacer una historia o una pregunta a tu gusto.
+
+Esta aplicación se ha desarrollado en clase por Mario Hernández y Alejandro Suarez.
 
 ## Estado del proyecto
 
 La aplicación se encuentra en una fase inicial centrada en la interfaz. Actualmente permite escribir una pregunta de hasta 280 caracteres, seleccionar una de las preguntas sugeridas y enviarla desde el formulario. La zona de resultado y el composable `useScenario` están preparados como base para la siguiente fase.
 
 La generación de escenarios aún no está conectada: enviar una pregunta no produce todavía una respuesta. Tampoco hay integración con una API de IA ni configuración de credenciales.
+
+De hecho, actualmente no está implementado todos los formularios ni nada del estilo, que irá planificando Alex para dividir el trabajo en front y back entre ambos.
+
+
+## Requisitos
+![Captura de la aplicación](./img/cap1.png)
 
 ## Tecnologías
 
