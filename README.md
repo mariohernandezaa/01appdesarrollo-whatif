@@ -1,63 +1,78 @@
 # ¿Qué habría pasado si...?
 
-Aplicación web para explorar escenarios alternativos a partir de preguntas hipotéticas.
+Aplicación web para plantear preguntas hipotéticas y explorar cómo podrían cambiar la historia, la sociedad o la vida cotidiana en universos alternativos.
 
-El usuario introduce una situación hipotética (por ejemplo: "¿Qué habría pasado si Internet se hubiese inventado en 1950?") y, en una fase posterior, una API de IA generará un escenario alternativo junto con sus posibles consecuencias.
+Por ejemplo: «¿Qué habría pasado si Internet se hubiese inventado en 1950?». La experiencia está pensada para que la persona escriba una hipótesis o parta de una pregunta de ejemplo y, cuando se incorpore la generación de escenarios, consulte una narración con sus posibles consecuencias.
 
-> **Estado actual:** esta primera fase solo incluye la estructura base de la interfaz. La conexión con la API de IA todavía no está implementada.
+## Estado del proyecto
 
-## Stack
+La aplicación se encuentra en una fase inicial centrada en la interfaz. Actualmente permite escribir una pregunta de hasta 280 caracteres, seleccionar una de las preguntas sugeridas y enviarla desde el formulario. La zona de resultado y el composable `useScenario` están preparados como base para la siguiente fase.
 
-- [Nuxt 3](https://nuxt.com/)
-- [Vue 3](https://vuejs.org/)
+La generación de escenarios aún no está conectada: enviar una pregunta no produce todavía una respuesta. Tampoco hay integración con una API de IA ni configuración de credenciales.
+
+## Tecnologías
+
+- [Nuxt 3](https://nuxt.com/) y [Vue 3](https://vuejs.org/)
 - TypeScript
-- [Tailwind CSS](https://tailwindcss.com/)
+- [Tailwind CSS](https://tailwindcss.com/) mediante `@nuxtjs/tailwindcss`
 - npm
 
-## Instalación
+## Requisitos
+
+- Node.js y npm
+
+## Puesta en marcha
+
+Instala las dependencias:
 
 ```bash
 npm install
 ```
 
-## Desarrollo
+Inicia el servidor de desarrollo:
 
 ```bash
 npm run dev
 ```
 
-La aplicación estará disponible en [http://localhost:3000](http://localhost:3000).
+Abre [http://localhost:3000](http://localhost:3000) en el navegador.
 
-## Build de producción
+## Comandos disponibles
 
-```bash
-npm run build
-```
+| Comando | Descripción |
+| --- | --- |
+| `npm run dev` | Inicia Nuxt en modo desarrollo. |
+| `npm run build` | Genera el build de producción. |
+| `npm run generate` | Genera el sitio estático. |
+| `npm run preview` | Sirve localmente el build de producción. |
 
-## Estructura del proyecto
+## Cómo está organizado
 
-```
+```text
 pages/
-  index.vue              # Página principal (única página de la app)
+  index.vue                 Página principal y coordinación de la pregunta
 
 components/
-  HypothesisForm.vue      # Formulario para introducir la pregunta hipotética
-  ExampleQuestions.vue    # Preguntas de ejemplo seleccionables
-  ScenarioResult.vue      # Zona de resultado (estado vacío por ahora)
+  HypothesisForm.vue        Entrada de texto, contador y envío de la pregunta
+  ExampleQuestions.vue      Preguntas sugeridas que rellenan el formulario
+  ScenarioResult.vue        Presentación del resultado o estado vacío
 
 composables/
-  useScenario.ts          # Composable preparado para la futura llamada a la IA
+  useScenario.ts            Estado y operaciones previstos para un escenario
 
 types/
-  scenario.ts              # Tipos TypeScript de consulta y resultado
+  scenario.ts               Tipos de consulta, resultado y estado
 
 assets/
   css/
-    main.css               # Entrada de Tailwind CSS
+    main.css                Directivas de Tailwind CSS
 ```
 
-## Próximas funcionalidades
+La configuración general de Nuxt está en `nuxt.config.ts`. El título y la descripción de la página también se definen allí.
 
-- Conexión con una API de IA para generar el escenario alternativo.
-- Manejo de estados de carga y error en la respuesta de la IA.
-- Renderizado del resultado generado en `ScenarioResult.vue`.
+## Próximos pasos
+
+- Conectar `useScenario` con un servicio de generación de escenarios.
+- Implementar y mostrar los estados de carga, éxito y error.
+- Renderizar en `ScenarioResult` la narración y las consecuencias devueltas por el servicio.
+- Definir la configuración segura de la API necesaria para el entorno de desarrollo y producción.
