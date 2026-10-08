@@ -14,6 +14,8 @@ La generación de escenarios aún no está conectada: enviar una pregunta no pro
 
 De hecho, actualmente no está implementado todos los formularios ni nada del estilo, que irá planificando Alex para dividir el trabajo en front y back entre ambos.
 
+![Captura de la aplicación](./public/img/cap2.png)
+
 
 ## Requisitos
 ![Captura de la aplicación](./public/img/cap1.png)
