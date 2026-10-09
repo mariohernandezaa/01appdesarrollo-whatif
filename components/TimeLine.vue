@@ -1,25 +1,48 @@
 <script setup lang="ts">
-const examples = [
-  '¿Qué habría pasado si Internet se hubiese inventado en 1950?',
-  '¿Qué habría pasado si los dinosaurios no se hubieran extinguido?',
-  '¿Qué habría pasado si la humanidad nunca hubiera inventado los coches?'
-]
+const props = withDefaults(defineProps<{
+  modelValue: number
+  minYear?: number
+  maxYear?: number
+}>(), {
+  minYear: 1800,
+  maxYear: 2100
+})
 
 const emit = defineEmits<{
-  select: [question: string]
+  'update:modelValue': [year: number]
 }>()
+
+const onYearInput = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  emit('update:modelValue', Number(input.value))
+}
 </script>
 
 <template>
-  <div class="flex flex-wrap gap-2">
-    <button
-      v-for="example in examples"
-      :key="example"
-      type="button"
-      class="rounded-full border border-neutral-300 px-4 py-2 text-sm text-neutral-600 transition-colors hover:border-neutral-900 hover:text-neutral-900"
-      @click="emit('select', example)"
+  <section class="space-y-3">
+    <div class="flex items-baseline justify-between gap-4">
+      <label for="scenario-year" class="text-sm font-medium text-neutral-700">
+        Año de referencia
+      </label>
+      <output for="scenario-year" class="text-xl font-semibold tabular-nums text-neutral-900">
+        {{ modelValue }}
+      </output>
+    </div>
+
+    <input
+      id="scenario-year"
+      type="range"
+      :value="modelValue"
+      :min="props.minYear"
+      :max="props.maxYear"
+      step="1"
+      class="w-full accent-neutral-900"
+      @input="onYearInput"
     >
-      {{ example }}
-    </button>
-  </div>
+
+    <div class="flex justify-between text-xs tabular-nums text-neutral-500" aria-hidden="true">
+      <span>{{ props.minYear }}</span>
+      <span>{{ props.maxYear }}</span>
+    </div>
+  </section>
 </template>

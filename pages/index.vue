@@ -1,10 +1,7 @@
 <script setup lang="ts">
 const question = ref('')
+const selectedYear = ref(1950)
 const { result } = useScenario()
-
-const handleSelectExample = (example: string) => {
-  question.value = example
-}
 
 const handleSubmit = (submittedQuestion: string) => {
   // La conexión con la API de IA se implementará en una fase posterior.
@@ -25,7 +22,7 @@ const handleSubmit = (submittedQuestion: string) => {
 
     <section class="space-y-4">
       <HypothesisForm v-model="question" @submit="handleSubmit" />
-      <ExampleQuestions @select="handleSelectExample" />
+      <TimeLine v-model="selectedYear" />
     </section>
 
     <section>
