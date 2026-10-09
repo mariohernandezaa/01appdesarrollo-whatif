@@ -1,5 +1,9 @@
+export type UnrealismLevel = 'realista' | 'ilusionante' | 'descerebrado'
+
 export interface ScenarioQuery {
   question: string
+  year: number
+  unrealismLevel: UnrealismLevel
 }
 
 export interface ScenarioResult {

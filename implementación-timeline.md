@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Este documento explica el selector de año añadido a `TimeLine.vue` y cómo se conecta con la página principal. En esta fase, la línea temporal permite elegir un año de referencia para una hipótesis. El componente comunica el año seleccionado a su componente padre, pero no genera una cronología de acontecimientos ni envía todavía el año a una IA.
+Este documento explica el selector de año de `TimeLine.vue` y su participación en la consulta. Permite elegir un año de referencia; al enviar el formulario, ese año se combina con la pregunta y el nivel de irrealismo seleccionados. La consulta estructurada se conserva en memoria mediante `useScenario`, pero todavía no se envía a una IA.
 
 ## Qué se implementó
 
@@ -15,7 +15,10 @@ El intervalo predeterminado va de **1800 a 2100**, y el salto entre valores es d
 | Archivo | Responsabilidad |
 | --- | --- |
 | `components/TimeLine.vue` | Presenta el selector, recibe el año actual y emite el año nuevo cuando cambia. |
+| `components/UnrealismSelector.vue` | Permite seleccionar el estilo de respuesta y emite el nivel elegido. |
 | `pages/index.vue` | Mantiene el valor seleccionado en `selectedYear` y lo enlaza con `TimeLine.vue` usando `v-model`. |
+| `types/scenario.ts` | Define el tipo de consulta con pregunta, año y nivel de irrealismo. |
+| `composables/useScenario.ts` | Conserva en memoria la última consulta estructurada recibida. |
 
 ## Contrato del componente
 
@@ -80,21 +83,29 @@ Vue interpreta esa sintaxis, de forma conceptual, como el paso de `selectedYear`
 4. `v-model` actualiza `selectedYear` en `pages/index.vue`.
 5. Vue vuelve a renderizar el valor actualizado en el control y en `<output>`.
 
-La página es propietaria del estado y el componente se ocupa de la interfaz y de notificar cambios. Esta separación permite combinar más adelante el año con la pregunta antes de enviar la consulta.
+La página es propietaria del estado y el componente se ocupa de la interfaz y de notificar cambios. Al enviar el formulario, la página combina ese año con la pregunta y el nivel de irrealismo:
+
+```ts
+void explore({
+  question: submittedQuestion,
+  year: selectedYear.value,
+  unrealismLevel: selectedUnrealismLevel.value
+})
+```
+
+`useScenario` guarda una copia del objeto recibido en `query`. Así se conserva el conjunto exacto de valores enviados aunque los controles cambien después.
 
 ## Qué no hace todavía
 
-La implementación actual cubre la selección y el almacenamiento reactivo del año mientras la página está abierta. No incluye:
+La implementación actual cubre la selección del año y el almacenamiento reactivo de la consulta mientras la página está abierta. No incluye:
 
-- Guardado persistente en `localStorage`, una base de datos o una sesión. Al recargar la página, el valor vuelve al inicial `1950`.
-- Envío del año junto con la pregunta al método `useScenario().explore(...)`.
-- Inclusión del año en `ScenarioQuery` o en un prompt.
-- Una llamada a un endpoint, proveedor de IA o servicio de generación.
+- Guardado persistente en `localStorage`, una base de datos o una sesión. Al recargar la página, los controles vuelven a sus valores iniciales.
+- Construcción del prompt o envío de la consulta a un endpoint, proveedor de IA o servicio de generación.
 - Animaciones con VueUse Motion. Aunque el paquete está instalado, el selector no usa directivas de movimiento y el módulo no está registrado en `nuxt.config.ts`.
 - Una cronología de hitos generados. El componente actual es un selector de año, no una visualización de eventos a lo largo del tiempo.
 
-Para preparar el siguiente paso, habrá que decidir si el año es obligatorio, añadirlo al tipo de consulta y pasarlo desde la página al composable. La construcción final del prompt y la llamada al proveedor deben hacerse en el servidor para mantener las credenciales fuera del navegador.
+El siguiente paso para generar respuestas es definir el proveedor y crear un endpoint de servidor que valide la consulta y construya el prompt. Las credenciales deben permanecer en el servidor, fuera del navegador.
 
 ## Comprobación
 
-El build de producción (`npm run build`) terminó correctamente después de implementar el selector. En el estado actual del workspace, sin embargo, `pages/index.vue` conserva `<ExampleQuestions @select="handleSelectExample" />`, pero no declara `handleSelectExample` y no existe `components/ExampleQuestions.vue`. El diagnóstico de la página informa de ese error. Es una incidencia separada del selector y debe resolverse para que la página actual vuelva a compilar.
+El build de producción debe ejecutarse después de integrar los cambios de consulta y el nuevo selector. La ausencia de una llamada a IA es intencional: el proyecto aún no tiene endpoint, proveedor ni credenciales configurados.

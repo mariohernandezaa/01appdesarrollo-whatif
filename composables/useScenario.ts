@@ -1,12 +1,13 @@
-import type { ScenarioResult, ScenarioStatus } from '~/types/scenario'
+import type { ScenarioQuery, ScenarioResult, ScenarioStatus } from '~/types/scenario'
 
 export const useScenario = () => {
   const status = ref<ScenarioStatus>('idle')
+  const query = ref<ScenarioQuery | null>(null)
   const result = ref<ScenarioResult | null>(null)
   const error = ref<string | null>(null)
 
-  const explore = async (question: string) => {
-    // TODO: conectar con la API de IA en una fase posterior.
+  const explore = async (submittedQuery: ScenarioQuery) => {
+    query.value = { ...submittedQuery }
     status.value = 'idle'
     result.value = null
     error.value = null
@@ -20,6 +21,7 @@ export const useScenario = () => {
 
   return {
     status,
+    query,
     result,
     error,
     explore,

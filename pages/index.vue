@@ -1,11 +1,18 @@
 <script setup lang="ts">
+import type { UnrealismLevel } from '~/types/scenario'
+
 const question = ref('')
 const selectedYear = ref(1950)
-const { result } = useScenario()
+const selectedUnrealismLevel = ref<UnrealismLevel>('realista')
+const { result, explore } = useScenario()
 
 const handleSubmit = (submittedQuestion: string) => {
-  // La conexión con la API de IA se implementará en una fase posterior.
   question.value = submittedQuestion
+  void explore({
+    question: submittedQuestion,
+    year: selectedYear.value,
+    unrealismLevel: selectedUnrealismLevel.value
+  })
 }
 </script>
 
@@ -23,6 +30,7 @@ const handleSubmit = (submittedQuestion: string) => {
     <section class="space-y-4">
       <HypothesisForm v-model="question" @submit="handleSubmit" />
       <TimeLine v-model="selectedYear" />
+      <UnrealismSelector v-model="selectedUnrealismLevel" />
     </section>
 
     <section>
