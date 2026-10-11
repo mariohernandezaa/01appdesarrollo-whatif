@@ -120,10 +120,3 @@ types/scenario.ts                  Tipos de consulta, resultado y estado
 nuxt.config.ts                     Configuración de Nuxt
 .env.example                       Plantilla de variables locales
 ```
-
-## Capturas
-
-Las capturas que hay ahora en `public/img` son de versiones anteriores. Para actualizarlas, guarda estas imágenes con estos nombres:
-
-- `public/img/cap1.png`: formulario actual con el selector de año y el nivel de realismo.
-- `public/img/cap2.png`: ejemplo de una respuesta generada, con narración y consecuencias.
