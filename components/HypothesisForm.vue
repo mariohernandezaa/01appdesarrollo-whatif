@@ -31,7 +31,7 @@ const onSubmit = () => {
       :value="modelValue"
       :maxlength="MAX_LENGTH"
       rows="4"
-      placeholder="¿Qué habría pasado si Internet se hubiese inventado en 1950?"
+      placeholder="¿Que habría pasado si los extraterrestres nos hubieran invadido?"
       class="w-full resize-none rounded-2xl border border-neutral-300 bg-white p-4 text-lg leading-relaxed text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none"
       @input="onInput"
     />
