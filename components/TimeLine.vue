@@ -4,8 +4,8 @@ const props = withDefaults(defineProps<{
   minYear?: number
   maxYear?: number
 }>(), {
-  minYear: 1800,
-  maxYear: 2100
+  minYear: 0,
+  maxYear: 3000
 })
 
 const emit = defineEmits<{

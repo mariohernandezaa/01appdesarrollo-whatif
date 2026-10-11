@@ -4,7 +4,7 @@ import type { UnrealismLevel } from '~/types/scenario'
 const question = ref('')
 const selectedYear = ref(1950)
 const selectedUnrealismLevel = ref<UnrealismLevel>('realista')
-const { result, explore } = useScenario()
+const { result, status, error, explore } = useScenario()
 
 const handleSubmit = (submittedQuestion: string) => {
   question.value = submittedQuestion
@@ -28,13 +28,13 @@ const handleSubmit = (submittedQuestion: string) => {
     </header>
 
     <section class="space-y-4">
-      <HypothesisForm v-model="question" @submit="handleSubmit" />
+      <HypothesisForm v-model="question" :is-loading="status === 'loading'" @submit="handleSubmit" />
       <TimeLine v-model="selectedYear" />
       <UnrealismSelector v-model="selectedUnrealismLevel" />
     </section>
 
     <section>
-      <ScenarioResult :result="result" />
+      <ScenarioResult :result="result" :status="status" :error="error" />
     </section>
   </main>
 </template>

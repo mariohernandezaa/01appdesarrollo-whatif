@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{
   modelValue: string
+  isLoading?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -40,10 +41,10 @@ const onSubmit = () => {
 
       <button
         type="submit"
-        :disabled="!isValid"
+        :disabled="!isValid || isLoading"
         class="rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
       >
-        Explorar universo
+        {{ isLoading ? 'Generando...' : 'Explorar universo' }}
       </button>
     </div>
   </form>

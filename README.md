@@ -1,196 +1,129 @@
 # ¿Qué habría pasado si...?
 
-Aplicación web para plantear preguntas hipotéticas y explorar cómo podrían cambiar la historia, la sociedad o la vida cotidiana en universos alternativos. (Pregunta cualquier cosa jejejej)
+Aplicación web para plantear una hipótesis y explorar una posible historia alternativa. El proyecto se ha desarrollado en clase por Mario Hernández y Alejandro Suarez.
 
-Por ejemplo: «¿Qué habría pasado si Internet se hubiese inventado en el 1AC?». Tendrás varios campos distintos de formulario para hacer una historia o una pregunta a tu gusto.
+## Qué permite hacer
 
-Esta aplicación se ha desarrollado en clase por Mario Hernández y Alejandro Suarez.
+Escribe una pregunta de hasta 280 caracteres, elige un año de referencia entre 0 y 3000 y selecciona un estilo: realista, ilusionante o descerebrado. Al enviar el formulario, la aplicación pide a una IA una historia y varias consecuencias.
 
-## Estado del proyecto
+El año es un dato de contexto para la respuesta. La aplicación muestra los estados de carga y error, y conserva la pregunta si falla la solicitud.
 
-La aplicación se encuentra en una fase inicial centrada en la interfaz. Actualmente permite escribir una pregunta de hasta 280 caracteres, seleccionar una de las preguntas sugeridas y enviarla desde el formulario. La zona de resultado y el composable `useScenario` están preparados como base para la siguiente fase.
+## Requisitos
 
-La generación de escenarios aún no está conectada: enviar una pregunta no produce todavía una respuesta. Tampoco hay integración con una API de IA ni configuración de credenciales.
+### Funcionales
 
-De hecho, actualmente no está implementado todos los formularios ni nada del estilo, que irá planificando Alex para dividir el trabajo en front y back entre ambos.
+- **RF-01.** Permitir escribir una pregunta obligatoria de hasta 280 caracteres.
+- **RF-02.** Permitir elegir un año entero entre 0 y 3000, ambos incluidos.
+- **RF-03.** Permitir elegir entre los estilos realista, ilusionante y descerebrado.
+- **RF-04.** Enviar esos datos a la IA y mostrar una narración y sus consecuencias, o un mensaje de error.
 
-## Diseño de la aplicación
+### No funcionales
 
-La experiencia se plantea como una página principal sencilla: la persona define un punto de divergencia, añade el contexto que considere útil y consulta una explicación de cómo podría desarrollarse ese universo alternativo.
+- **RNF-01.** Mantener la clave de OpenRouter en el servidor, configurada mediante `.env` y fuera del control de versiones.
+- **RNF-02.** Validar los datos también en el servidor; no confiar únicamente en las restricciones del formulario.
+- **RNF-03.** Mostrar la interfaz y los mensajes en español.
+- **RNF-04.** Ejecutar la aplicación con el servidor de Nuxt; la generación estática no ejecuta la ruta de IA.
 
-### Diseño de la pantalla
+## Cómo funciona
 
-1. **Cabecera:** título y una frase breve que invite a plantear una hipótesis.
-2. **Formulario:** campo obligatorio para la pregunta o punto de divergencia. Como ampliación, se proponen campos opcionales para el contexto temporal o geográfico, los ámbitos que se quieren explorar (por ejemplo, ciencia, sociedad o economía) y el enfoque narrativo.
-3. **Preguntas de ejemplo:** accesos rápidos que rellenan el campo principal y permiten editarlo antes de enviarlo.
-4. **Resultado:** espacio para la narración y una lista de consecuencias. Se contempla una visualización cronológica con `TimeLine.vue`, que se está desarrollando en paralelo; su integración y contrato se acordarán con su responsable.
-5. **Estados:** el área de resultado debe distinguir entre estado vacío, generación en curso, respuesta disponible y error recuperable.
-
-El formulario actual ya permite escribir una pregunta de hasta 280 caracteres, elegir ejemplos y bloquear el envío de una pregunta vacía. Los campos adicionales, la generación y los estados de resultado descritos a continuación son objetivos de diseño, no funcionalidades terminadas.
-
-### Requisitos funcionales
-
-| ID | Requisito | Estado |
-| --- | --- | --- |
-| RF-01 | Permitir escribir una hipótesis de hasta 280 caracteres y no aceptar una entrada vacía. | Implementado |
-| RF-02 | Permitir seleccionar una pregunta de ejemplo y cargarla en el campo de hipótesis. | Implementado |
-| RF-03 | Permitir añadir contexto temporal o geográfico y, opcionalmente, elegir ámbitos y enfoque narrativo. | Propuesto |
-| RF-04 | Enviar la consulta válida al servicio de generación sin bloquear la interfaz. | Pendiente |
-| RF-05 | Mostrar la narración y sus consecuencias en el área de resultado. | Pendiente |
-| RF-06 | Mostrar estados de carga y error, permitir reintentar y conservar la consulta ante un fallo. | Pendiente |
-| RF-07 | Presentar los hitos del escenario en una cronología cuando se acuerde la integración de `TimeLine.vue`. | Pendiente de coordinación |
-
-### Requisitos no funcionales
-
-| ID | Requisito |
-| --- | --- |
-| RNF-01 | La interfaz debe adaptarse a móvil y escritorio sin perder acceso al formulario ni al resultado. |
-| RNF-02 | Los controles deben poder utilizarse con teclado, tener etiquetas comprensibles y mostrar claramente el foco y los errores. |
-| RNF-03 | La aplicación debe mantener la clave de cualquier proveedor de IA en el servidor; nunca debe exponerse en el cliente. |
-| RNF-04 | La validación debe realizarse también en el servidor y los errores del servicio no deben borrar la hipótesis escrita. |
-| RNF-05 | La interfaz debe comunicar la espera de forma inmediata y recuperarse de errores de red o respuestas no válidas. |
-| RNF-06 | Los componentes, el estado del escenario y sus tipos deben mantenerse separados para facilitar el trabajo en paralelo. |
-| RNF-07 | Solo deben enviarse al servicio los datos necesarios para generar el escenario, informando a la persona si se incorporan servicios externos. |
-
-### Diagrama de componentes
-
-El diagrama muestra la arquitectura prevista. La conexión con el servicio y la incorporación de `TimeLine.vue` están pendientes; las flechas discontinuas indican esa planificación.
+La página guarda los campos y `useScenario` (es un composable) envía la consulta a una ruta del servidor Nuxt. Esa ruta valida los datos y llama a OpenRouter. La clave de API solo se lee en el servidor.
 
 ```mermaid
 flowchart LR
-  User[Usuario] --> Page[pages/index.vue]
-  Page --> Form[HypothesisForm.vue]
-  Page --> Examples[ExampleQuestions.vue]
-  Examples -->|Rellenar hipótesis| Form
-  Form -->|Enviar consulta válida| Scenario[useScenario]
-  Scenario -->|Resultado y estado| Page
-  Page --> Result[ScenarioResult.vue]
-  Scenario -.->|Integración pendiente| API[Servicio de generación]
-  API -.->|Narración y consecuencias| Scenario
-  Page -.->|Integración en paralelo| Timeline[TimeLine.vue]
+    Usuario --> Formulario
+    Formulario --> Estado[useScenario]
+    Estado --> Ruta[API de Nuxt]
+    Ruta --> OpenRouter
+    OpenRouter --> Ruta
+    Ruta --> Estado
+    Estado --> Resultado
 ```
-
-### Diagrama de secuencia
-
-Este es el flujo objetivo para cuando se conecte el servicio de generación. La llamada a la API y la presentación de sus estados todavía no están implementadas.
 
 ```mermaid
 sequenceDiagram
-  actor User as Usuario
-  participant Form as HypothesisForm.vue
-  participant Page as pages/index.vue
-  participant Scenario as useScenario
-  participant API as Servicio futuro
-  participant Result as ScenarioResult.vue
+    actor User as Usuario
+    participant App as Aplicacion Nuxt
+    participant Api as API de Nuxt
+    participant AI as OpenRouter
 
-  User->>Form: Escribe hipótesis y envía
-  Form->>Form: Comprueba que no esté vacía
-  alt Hipótesis vacía
-    Form-->>User: Mantiene el envío deshabilitado
-  else Hipótesis válida
-    Form-->>Page: Emite submit(question)
-    Page->>Scenario: explore(question)
-    Scenario-->>Page: status = loading
-    Page-->>User: Muestra indicador de carga
-    Scenario->>API: Solicita la generación
-    alt Generación correcta
-      API-->>Scenario: Narración y consecuencias
-      Scenario-->>Page: result y status = success
-      Page->>Result: Actualiza el resultado
-      Result-->>User: Muestra el escenario
-    else Error de generación
-      API-->>Scenario: Error
-      Scenario-->>Page: error y status = error
-      Page-->>User: Muestra el error y conserva la consulta
-    end
-  end
+    User->>App: Envia la pregunta y sus opciones
+    App->>Api: POST /api/scenario
+    Api->>AI: Solicita el escenario
+    AI-->>Api: Devuelve narracion y consecuencias
+    Api-->>App: Devuelve el resultado
+    App-->>User: Muestra el resultado o un error
 ```
 
-### Ciclo de estados
+## Configurar OpenRouter
 
-Los estados corresponden a `ScenarioStatus`. El recorrido completo describe el comportamiento previsto cuando se implemente la generación.
+La aplicación usa el modelo `openrouter/free` de OpenRouter.
 
-```mermaid
-stateDiagram-v2
-  [*] --> Idle
-  Idle --> Loading: Enviar consulta válida
-  Loading --> Success: Recibir resultado
-  Loading --> Error: Fallo o respuesta no válida
-  Success --> Loading: Realizar otra consulta
-  Error --> Loading: Reintentar
-  Success --> Idle: Limpiar resultado
-  Error --> Idle: Limpiar error
+1. Crear una clave de API en OpenRouter.
+2. Si todavía no tienes un archivo `.env`, copia `.env.example` y ponle ese nombre.
+3. Añade tu clave en `.env`:
+
+```env
+NUXT_OPENROUTER_API_KEY=tu_clave_de_api
+NUXT_OPENROUTER_MODEL=openrouter/free
 ```
 
-![Captura de la aplicación](./public/img/cap2.png)
 
 
-## Requisitos
-![Captura de la aplicación](./public/img/cap1.png)
+## Puesta en marcha
+
+Necesitas Node.js y npm. Instala las dependencias e inicia el servidor:
+
+```bash
+npm install
+npm run dev
+```
+
+Para comprobar la compilación de producción, ejecuta `npm run build`. La generación de respuestas necesita una aplicación Nuxt con servidor, porque la API está en `server/api`.
+
+## Pruebas
+
+Ejecuta las pruebas unitarias con:
+
+```bash
+npm test
+```
+
+La suite comprueba la validación que comparte la API: pregunta obligatoria y longitud máxima, años enteros entre 0 y 3000, y niveles permitidos. No llama a OpenRouter ni necesita una clave. Para verificar además la compilación, ejecuta `npm run build`.
+
+| Caso | Entrada | Resultado esperado |
+| --- | --- | --- |
+| T-01 | Pregunta vacía o solo espacios | La consulta se rechaza. |
+| T-02 | Pregunta de 280 caracteres y de 281 caracteres | La primera se acepta; la segunda se rechaza. |
+| T-03 | Años 0 y 3000; años -1 y 3001 | Se aceptan los límites; se rechazan los valores exteriores. |
+| T-04 | Cada uno de los tres estilos disponibles | Los tres se aceptan; un estilo desconocido se rechaza. |
 
 ## Tecnologías
 
 - [Nuxt 3](https://nuxt.com/) y [Vue 3](https://vuejs.org/)
-- TypeScript
-- [Tailwind CSS](https://tailwindcss.com/) mediante `@nuxtjs/tailwindcss`
-- npm
+- TypeScript y Tailwind CSS
+- OpenRouter para acceder al modelo de IA
+- npm para instalar dependencias y ejecutar la aplicación
 
-## Requisitos
-
-- Node.js y npm
-
-## Puesta en marcha
-
-Instala las dependencias:
-
-```bash
-npm install
-```
-
-Inicia el servidor de desarrollo:
-
-```bash
-npm run dev
-```
-
-Abre [http://localhost:3000](http://localhost:3000) en el navegador.
-
-## Comandos disponibles
-
-| Comando | Descripción |
-| --- | --- |
-| `npm run dev` | Inicia Nuxt en modo desarrollo. |
-| `npm run build` | Genera el build de producción. |
-| `npm run generate` | Genera el sitio estático. |
-| `npm run preview` | Sirve localmente el build de producción. |
-
-## Cómo está organizado
+## Organización del proyecto
 
 ```text
-pages/
-  index.vue                 Página principal y coordinación de la pregunta
-
-components/
-  HypothesisForm.vue        Entrada de texto, contador y envío de la pregunta
-  ExampleQuestions.vue      Preguntas sugeridas que rellenan el formulario
-  ScenarioResult.vue        Presentación del resultado o estado vacío
-
-composables/
-  useScenario.ts            Estado y operaciones previstos para un escenario
-
-types/
-  scenario.ts               Tipos de consulta, resultado y estado
-
-assets/
-  css/
-    main.css                Directivas de Tailwind CSS
+pages/index.vue                    Página principal y coordinación del formulario
+components/HypothesisForm.vue      Entrada de la pregunta
+components/TimeLine.vue            Selector del año de referencia
+components/UnrealismSelector.vue   Selector del estilo de respuesta
+components/ScenarioResult.vue      Resultado, carga y errores
+composables/useScenario.ts         Estado y solicitud del escenario
+server/api/scenario.post.ts        Validación y llamada a OpenRouter
+server/utils/scenario-query.ts     Validación reutilizable de la consulta
+tests/scenario-query.test.ts       Pruebas unitarias de la validación
+types/scenario.ts                  Tipos de consulta, resultado y estado
+nuxt.config.ts                     Configuración de Nuxt
+.env.example                       Plantilla de variables locales
 ```
 
-La configuración general de Nuxt está en `nuxt.config.ts`. El título y la descripción de la página también se definen allí.
+## Capturas
 
-## Próximos pasos
+Las capturas que hay ahora en `public/img` son de versiones anteriores. Para actualizarlas, guarda estas imágenes con estos nombres:
 
-- Conectar `useScenario` con un servicio de generación de escenarios.
-- Implementar y mostrar los estados de carga, éxito y error.
-- Renderizar en `ScenarioResult` la narración y las consecuencias devueltas por el servicio.
-- Definir la configuración segura de la API necesaria para el entorno de desarrollo y producción.
+- `public/img/cap1.png`: formulario actual con el selector de año y el nivel de realismo.
+- `public/img/cap2.png`: ejemplo de una respuesta generada, con narración y consecuencias.

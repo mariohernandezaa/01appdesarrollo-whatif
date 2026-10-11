@@ -4,6 +4,10 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss'],
   css: ['~/assets/css/main.css'],
+  runtimeConfig: {
+    openrouterApiKey: '',
+    openrouterModel: 'openrouter/free'
+  },
   app: {
     head: {
       title: '¿Qué habría pasado si...?',
