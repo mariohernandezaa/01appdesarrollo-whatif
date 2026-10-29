@@ -22,25 +22,16 @@
   100% { transform: rotateY(360deg) rotate(360deg); }
 }
 @keyframes chaos-colors {
-  0% { background-color: #ff00ff; color: #00ff00; border-color: #ffff00; }
+  0% { background-color: #ff00ff; color: #00ff00; border-color: #ffff00; filter: hue-rotate(0deg); }
   14% { background-color: #00ffff; color: #ff0000; border-color: #ff00ff; }
   28% { background-color: #ffff00; color: #0000ff; border-color: #00ffff; }
   42% { background-color: #ff0000; color: #ffffff; border-color: #00ff00; }
   57% { background-color: #00ff00; color: #ff00ff; border-color: #000000; }
   71% { background-color: #0000ff; color: #ffff00; border-color: #ff0000; }
   85% { background-color: #000000; color: #00ffff; border-color: #ffffff; }
-  100% { background-color: #ff8800; color: #8800ff; border-color: #ff00ff; }
+  50% { filter: hue-rotate(180deg) saturate(4); }
+  100% { background-color: #ff8800; color: #8800ff; border-color: #ff00ff; filter: hue-rotate(360deg); }
 }
-@keyframes chaos-page {
-  0% { filter: hue-rotate(0deg) saturate(3) invert(0); }
-  50% { filter: hue-rotate(180deg) saturate(6) invert(1); }
-  100% { filter: hue-rotate(360deg) saturate(3) invert(0); }
-}
-
-html.chaos {
-  animation: chaos-page 0.6s linear infinite;
-}
-
 html.chaos body *:not(.chaos-exempt):not(.chaos-exempt *) {
   animation:
     chaos-spin-a 1.7s linear infinite,

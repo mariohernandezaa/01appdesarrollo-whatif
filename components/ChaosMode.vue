@@ -1,19 +1,23 @@
 <template>
-  <div class="chaos-exempt">
-    <img
-      v-if="active"
-      ref="img"
-      src="/img/fotorandom.jpeg"
-      alt=""
-      class="chaos-exempt chaos-bouncer"
-    />
-    <button
-      type="button"
-      class="chaos-exempt chaos-toggle"
-      aria-label="???"
-      @click="toggle"
-    />
-  </div>
+  <ClientOnly>
+    <Teleport to="body">
+      <div class="chaos-exempt">
+        <img
+          v-if="active"
+          ref="img"
+          src="/img/fotorandom.jpeg"
+          alt=""
+          class="chaos-exempt chaos-bouncer"
+        />
+        <button
+          type="button"
+          class="chaos-exempt chaos-toggle"
+          aria-label="???"
+          @click="toggle"
+        />
+      </div>
+    </Teleport>
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
@@ -101,7 +105,10 @@ onBeforeUnmount(() => {
   position: fixed;
   top: 0;
   left: 0;
-  width: 160px;
+  width: 200px;
+  filter: none;
+  border-radius: 8px;
+  box-shadow: 0 0 0 4px #fff, 0 0 0 8px #000, 0 0 24px 8px rgba(0, 0, 0, 0.6);
   height: auto;
   pointer-events: none;
   z-index: 2147483646;
